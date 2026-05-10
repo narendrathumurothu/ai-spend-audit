@@ -1,3 +1,5 @@
+// lib/types.ts
+
 export type ToolName =
     | "cursor"
     | "github_copilot"
@@ -61,6 +63,8 @@ export type UseCase =
     | "research"
     | "mixed";
 
+export type UsageIntensity = "light" | "moderate" | "heavy";
+
 export interface ToolInput {
     tool: ToolName;
     plan: string;
@@ -72,6 +76,7 @@ export interface FormData {
     tools: ToolInput[];
     teamSize: number;
     useCase: UseCase;
+    usageIntensity: UsageIntensity;
 }
 
 export interface ToolRecommendation {
@@ -82,6 +87,7 @@ export interface ToolRecommendation {
     savings: number;
     reason: string;
     isOptimal: boolean;
+    isUpgrade?: boolean;
 }
 
 export interface AuditResult {
