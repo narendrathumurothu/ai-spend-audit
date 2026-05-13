@@ -1,24 +1,35 @@
 # Automated Tests
 
-I wrote automated tests using **Vitest** to ensure the core logic of the `auditEngine` is correct and robust.
+This project uses **Vitest** to validate the audit engine and ensure the core recommendation logic behaves correctly.
 
-## How to run the tests
-1. Install dependencies: `npm install`
-2. Run the tests: `npm run test`
+## How to run
 
-## Test Coverage
+```bash
+npm install
+npm run test
+```
+
+If PowerShell script execution is blocked, the direct command is:
+
+```bash
+node node_modules/vitest/vitest.mjs run
+```
+
+## Test coverage
 
 **Filename:** `__tests__/auditEngine.test.ts`
 
-This file covers the core business logic of evaluating a user's AI spend. Here are the 5 tests:
+### What it covers
 
-1. **Downgrades Cursor Ultra to Pro+ for solo users:** 
-   - **What it covers:** Verifies that a single developer paying $200/mo for Cursor Ultra is correctly advised to downgrade to Pro+, calculating the exact savings ($200 - $60 = $140).
-2. **Drops GitHub Copilot if Cursor is also used for coding (Duplicate):** 
-   - **What it covers:** Checks the duplication logic. If a user inputs both Cursor and GitHub Copilot for coding, it recommends dropping Copilot entirely since they offer overlapping capabilities, maximizing savings.
-3. **Recommends Claude Pro for writing over GitHub Copilot:** 
-   - **What it covers:** Validates use-case alignment. GitHub Copilot offers no value for "writing", so the engine correctly suggests switching to Claude Pro instead.
-4. **Identifies optimal spending (No change needed):** 
-   - **What it covers:** Ensures the engine doesn't manufacture fake savings. If a solo dev is on Cursor Pro ($20/mo) for coding, the system recognizes this as optimal and suggests 0 savings.
-5. **Drops ChatGPT if Claude is also used for writing (Duplicate):** 
-   - **What it covers:** Checks duplication logic for writing tasks. Recommends dropping ChatGPT if Claude Pro is already present, as Claude is generally superior for long-form writing and paying for both is redundant.
+1. **Cursor Ultra downgrade for solo users**
+   - Confirms the audit recommends downgrading from Cursor Ultra to Pro+ when a single developer is overpaying.
+2. **Duplicate tool detection for Cursor + Copilot**
+   - Ensures the engine flags overlapping coding tools and recommends dropping the redundant subscription.
+3. **Writing use case alignment**
+   - Validates that GitHub Copilot is not recommended for writing and that Claude Pro is suggested instead.
+4. **Optimal spend detection**
+   - Verifies the engine does not generate false savings for already optimal plans.
+5. **Duplicate tool detection for Claude + ChatGPT**
+   - Ensures redundant writing tools are flagged and that ChatGPT is recommended to be removed when Claude is sufficient.
+
+These tests focus on the audit engine because it is the product's core differentiator.

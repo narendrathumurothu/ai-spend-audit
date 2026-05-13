@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Credex AI Spend Audit
 
-## Getting Started
+A free, launch-ready tool for startup founders and engineering leaders to audit AI tool spend, identify plan mismatches, and surface measurable savings from plan changes or discounted credits.
 
-First, run the development server:
+![Landing screen](public/screenshot-1.png)
+![Audit report](public/screenshot-2.png)
+![Shareable result](public/screenshot-3.png)
+
+## Live demo
+- https://YOUR_DEPLOYED_URL_HERE
+
+## Quick start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+## Decisions
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js + TypeScript**: Provides fast page rendering, built-in routing, and strong type safety for the audit engine and backend API routes.
+- **Tailwind CSS**: Keeps the design polished and responsive without a heavy UI framework.
+- **Supabase**: Enables persistent audit storage and a shareable public URL without custom database setup.
+- **Google Gemini**: Powers the personalized summary while the audit logic remains rule-based and defensible.
+- **SendGrid**: Enables transactional email confirmation for lead capture.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This repository includes the full Round 1 deliverables in markdown as required by the assignment: `README.md`, `ARCHITECTURE.md`, `DEVLOG.md`, `REFLECTION.md`, `TESTS.md`, `PRICING_DATA.md`, `PROMPTS.md`, `GTM.md`, `ECONOMICS.md`, `USER_INTERVIEWS.md`, `LANDING_COPY.md`, and `METRICS.md`.

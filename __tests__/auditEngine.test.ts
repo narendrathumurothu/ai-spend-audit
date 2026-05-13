@@ -1,7 +1,7 @@
 import { expect, test, describe } from 'vitest';
-import { runAudit } from '@/lib/auditEngine';
-import { FormData } from '@/lib/types';
-import { PRICING } from '@/lib/pricing';
+import { runAudit } from '../lib/auditEngine';
+import { FormData } from '../lib/types';
+import { PRICING } from '../lib/pricing';
 
 describe('Audit Engine', () => {
     

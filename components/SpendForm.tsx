@@ -40,7 +40,7 @@ export default function SpendForm() {
     const [useCase, setUseCase] = useState<UseCase>("mixed");
     const [usageIntensity, setUsageIntensity] = useState<UsageIntensity>("moderate");
 
-    // LocalStorage నుండి load చేయి
+    // Load persisted form state from localStorage.
     useEffect(() => {
         const saved = localStorage.getItem("auditFormData");
         if (saved) {

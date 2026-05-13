@@ -1,9 +1,7 @@
-// lib/auditEngine.ts
-
 import { PRICING, TOOL_DISPLAY_NAMES } from "./pricing";
 import { FormData, AuditResult, ToolRecommendation, ToolInput, UsageIntensity } from "./types";
 
-// Savings negative కాకుండా చూసుకో
+// safety check
 function safeSavings(current: number, recommended: number): number {
     const savings = current - recommended;
     return savings > 0 ? savings : 0;
@@ -23,7 +21,7 @@ function optimal(tool: string, currentSpend: number): ToolRecommendation {
     };
 }
 
-// Free plan logic — upgrade suggest చేయాలా?
+// Free plan logic — sugest to upgrade or not
 function analyzeFreeplan(
     tool: string,
     displayName: string,
@@ -89,7 +87,7 @@ function analyzeTool(
             );
         }
 
-        // Ultra — solo user కి overkill
+        // Ultra — solo user  overkill
         if (plan === "ultra" && seats === 1) {
             const recommended = PRICING.cursor.pro_plus.pricePerUser;
             const savings = safeSavings(currentSpend, recommended);
@@ -104,7 +102,7 @@ function analyzeTool(
             };
         }
 
-        // Pro+ — non-coding use case కి overkill
+        // Pro+ — 
         if (plan === "pro_plus" && useCase !== "coding") {
             const recommended = PRICING.cursor.pro.pricePerUser * seats;
             const savings = safeSavings(currentSpend, recommended);
@@ -119,7 +117,7 @@ function analyzeTool(
             };
         }
 
-        // Teams — solo user కి overkill
+        // Teams — 
         if (plan === "teams" && seats === 1) {
             const recommended = PRICING.cursor.pro.pricePerUser;
             const savings = safeSavings(currentSpend, recommended);
@@ -138,14 +136,13 @@ function analyzeTool(
         if (useCase === "writing") {
             const recommended = PRICING.claude.pro.pricePerUser * seats;
             const savings = safeSavings(currentSpend, recommended);
-            if (savings === 0) return optimal(displayName, currentSpend);
             return {
                 tool: displayName, currentSpend, savings,
                 recommendedAction: "Switch to Claude Pro for writing",
                 recommendedSpend: recommended,
-                reason: `Cursor is built exclusively for coding — zero value for writing tasks. Claude Pro ($${PRICING.claude.pro.pricePerUser}/month) is purpose-built for writing and significantly more effective. Save $${savings}/month.`,
+                reason: `Cursor is built exclusively for coding — zero value for writing tasks. Claude Pro ($${PRICING.claude.pro.pricePerUser}/month) is purpose-built for writing and significantly more effective. ${recommended > currentSpend ? `This recommendation improves fit even if it costs $${recommended - currentSpend}/month more.` : `Save $${savings}/month.`}`,
                 isOptimal: false,
-                isUpgrade: false,
+                isUpgrade: true,
             };
         }
     }
@@ -176,7 +173,7 @@ function analyzeTool(
             };
         }
 
-        // Pro+ — non-coding కి overkill
+        // Pro+ — 
         if (plan === "pro_plus" && useCase !== "coding") {
             const recommended = PRICING.github_copilot.pro.pricePerUser * seats;
             const savings = safeSavings(currentSpend, recommended);
@@ -191,18 +188,17 @@ function analyzeTool(
             };
         }
 
-        // Writing — wrong tool
+        // Writing — 
         if (useCase === "writing") {
             const recommended = PRICING.claude.pro.pricePerUser * seats;
             const savings = safeSavings(currentSpend, recommended);
-            if (savings === 0) return optimal(displayName, currentSpend);
             return {
                 tool: displayName, currentSpend, savings,
                 recommendedAction: "Switch to Claude Pro for writing",
                 recommendedSpend: recommended,
-                reason: `GitHub Copilot is a coding-only tool — it provides zero value for writing tasks. Claude Pro ($${PRICING.claude.pro.pricePerUser}/month) is purpose-built for writing and more cost-effective. Save $${savings}/month.`,
+                reason: `GitHub Copilot is a coding-only tool — it provides zero value for writing tasks. Claude Pro ($${PRICING.claude.pro.pricePerUser}/month) is purpose-built for writing and more cost-effective. ${recommended > currentSpend ? `This recommendation improves fit even if it costs $${recommended - currentSpend}/month more.` : `Save $${savings}/month.`}`,
                 isOptimal: false,
-                isUpgrade: false,
+                isUpgrade: true,
             };
         }
     }
@@ -233,7 +229,7 @@ function analyzeTool(
             };
         }
 
-        // Max 5x — writing only కి Pro చాలు
+        // Max 5x — 
         if (plan === "max_5x" && useCase === "writing") {
             const recommended = PRICING.claude.pro.pricePerUser * seats;
             const savings = safeSavings(currentSpend, recommended);
@@ -248,7 +244,7 @@ function analyzeTool(
             };
         }
 
-        // Team Standard — solo user కి Pro చాలు
+        // Team Standard —
         if (plan === "team_std" && seats === 1) {
             const recommended = PRICING.claude.pro.pricePerUser;
             const savings = safeSavings(currentSpend, recommended);
@@ -263,7 +259,7 @@ function analyzeTool(
             };
         }
 
-        // Team Premium — solo user కి Max 5x చాలు
+        // Team Premium — 
         if (plan === "team_prem" && seats === 1) {
             const recommended = PRICING.claude.max_5x.pricePerUser;
             const savings = safeSavings(currentSpend, recommended);
@@ -290,7 +286,7 @@ function analyzeTool(
             );
         }
 
-        // Pro — non-coding కి Plus చాలు
+        // Pro — non-coding 
         if (plan === "pro" && useCase !== "coding") {
             const recommended = PRICING.chatgpt.plus.pricePerUser * seats;
             const savings = safeSavings(currentSpend, recommended);
@@ -305,7 +301,7 @@ function analyzeTool(
             };
         }
 
-        // Business — solo user కి Plus చాలు
+        // Business — 
         if (plan === "business" && seats === 1) {
             const recommended = PRICING.chatgpt.plus.pricePerUser;
             const savings = safeSavings(currentSpend, recommended);

@@ -36,7 +36,7 @@ export async function POST(request: Request) {
         // 3. Save to Supabase (if connected)
         let auditId = crypto.randomUUID();
         try {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from("audits")
                 .insert({
                     id: auditId,
@@ -56,7 +56,10 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ auditId, auditResult, aiSummary });
 
-    } catch (e: any) {
-        return NextResponse.json({ error: e.message }, { status: 500 });
+    } catch (e: unknown) {
+        if (e instanceof Error) {
+            return NextResponse.json({ error: e.message }, { status: 500 });
+        }
+        return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
     }
 }
