@@ -32,30 +32,37 @@ const defaultTool = (tool: ToolName): ToolInput => ({
     seats: 1,
 });
 
+function getSavedFormData(): FormData | null {
+    if (typeof window === "undefined") return null;
+    const saved = localStorage.getItem("auditFormData");
+    if (!saved) return null;
+    try {
+        return JSON.parse(saved) as FormData;
+    } catch {
+        return null;
+    }
+}
+
 export default function SpendForm() {
     const router = useRouter();
-    const [selectedTools, setSelectedTools] = useState<ToolName[]>([]);
-    const [toolInputs, setToolInputs] = useState<Record<string, ToolInput>>({});
-    const [teamSize, setTeamSize] = useState(1);
-    const [useCase, setUseCase] = useState<UseCase>("mixed");
-    const [usageIntensity, setUsageIntensity] = useState<UsageIntensity>("moderate");
+    const savedForm = getSavedFormData();
+    const [selectedTools, setSelectedTools] = useState<ToolName[]>(() =>
+        savedForm?.tools.map((t) => t.tool) || []
+    );
+    const [toolInputs, setToolInputs] = useState<Record<string, ToolInput>>(() => {
+        if (!savedForm) return {};
+        const inputs: Record<string, ToolInput> = {};
+        savedForm.tools.forEach((t) => {
+            inputs[t.tool] = t;
+        });
+        return inputs;
+    });
+    const [teamSize, setTeamSize] = useState<number>(() => savedForm?.teamSize || 1);
+    const [useCase, setUseCase] = useState<UseCase>(() => savedForm?.useCase || "mixed");
+    const [usageIntensity, setUsageIntensity] = useState<UsageIntensity>(() =>
+        savedForm?.usageIntensity || "moderate"
+    );
 
-    // Load persisted form state from localStorage.
-    useEffect(() => {
-        const saved = localStorage.getItem("auditFormData");
-        if (saved) {
-            const data: FormData = JSON.parse(saved);
-            setSelectedTools(data.tools.map((t) => t.tool));
-            const inputs: Record<string, ToolInput> = {};
-            data.tools.forEach((t) => { inputs[t.tool] = t; });
-            setToolInputs(inputs);
-            setTeamSize(data.teamSize);
-            setUseCase(data.useCase);
-            setUsageIntensity(data.usageIntensity || "moderate");
-        }
-    }, []);
-
-    // LocalStorage లో save చేయి
     useEffect(() => {
         if (selectedTools.length === 0) return;
         const formData: FormData = {
